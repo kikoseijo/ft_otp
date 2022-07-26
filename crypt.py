@@ -7,12 +7,12 @@ class Encryptor():
         return key
 
     def key_write(self, key, key_name):
-        with open(key_name, 'wb') as mykey:
-            mykey.write(key)
+        with open(key_name, 'w') as key_file_name:
+            key_file_name.write(key)
 
     def key_load(self, key_name):
-        with open(key_name, 'rb') as mykey:
-            key = mykey.read()
+        with open(key_name, 'rb') as key_file_name:
+            key = key_file_name.read()
         return key
 
     def file_encrypt(self, key, original_file, encrypted_file):
@@ -30,3 +30,8 @@ class Encryptor():
         decrypted = f.decrypt(encrypted)
         with open(decrypted_file, 'wb') as file:
             file.write(decrypted)
+
+    def get_decrypted_key(self, key, encrypted_file):
+        f = Fernet(key)
+        decrypted = f.decrypt(self.key_load(encrypted_file))
+        return decrypted.decode("utf-8")
