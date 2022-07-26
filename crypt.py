@@ -1,6 +1,5 @@
 from cryptography.fernet import Fernet
 
-
 class Encryptor():
 
     def key_create(self):

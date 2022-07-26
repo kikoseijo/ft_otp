@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# pip install cryptography
+# pip install cryptography argparse
 python3 main.py
 
 
