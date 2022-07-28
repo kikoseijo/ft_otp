@@ -1,6 +1,7 @@
 from otp import OTP
 from crypt import Encryptor
 import secrets
+import argparse
 
 encryption_seed = "MZJLpBLnUNe1ejlQ9o_2Rav_nFKrxyrYyBVc-Z7cvbY="
 key_file_name = "ft_otp.key"
@@ -21,13 +22,9 @@ def save_key(key_64_hex):
 		encryptor = Encryptor()
 		encryptor.key_write(key_64_hex, key_file_name)
 		encryptor.file_encrypt(encryption_seed, key_file_name, key_file_name)
+		return True
 	else:
 		print("Error, Not an hexadecimal password or bellow 64 characters lenght")
-
-
-# token = create_password();
-# print(token)
-# save_key(token);
 
 def parse():
 	parser = argparse.ArgumentParser(
@@ -35,24 +32,29 @@ def parse():
 		description = 'One time password implementation.'
 	)
 	parser.add_argument('-v', '--version', action='version', version='KikOTP 1.0')
-	parser.add_argument('-g', '--get-key', nargs=1, help='Save hexadecimal key', default = None)
-	parser.add_argument('-k', '--key-produce', action='store_true', help = 'Generate new otp password.', default = False)
+	parser.add_argument('-g', '--getkey', nargs=1, help='Save hexadecimal key', default = None)
+	parser.add_argument('-k', '--keyproduce', action='store_true', help = 'Generate new otp password.', default = False)
 	args = parser.parse_args()
 	return args.__dict__
 
 if __name__ == "__main__":
 	dict = parse()
-	new_key = dict.get("get-key")
+	new_key = dict.get("getkey")
+	make_otp = dict.get("keyproduce")
 	if (new_key):
-		save_key(new_key)
-		print("Key succesfully encrypted into ft_otp.key")
-	else if (dict.get("key-produce"))
-		encryptor = Encryptor()
-		key = encryptor.get_decrypted_key(encryption_seed, key_file_name)
-		print(key)
-		otp = OTP(key)
-		one_time_password = otp.generate()
-		print(one_time_password)
+		if (save_key(new_key[0])):
+			print("Key succesfully encrypted into ft_otp.key")
+	elif (make_otp):
+		try:
+			encryptor = Encryptor()
+			key = encryptor.get_decrypted_key(encryption_seed, key_file_name)
+			if key:
+				print(key)
+				otp = OTP(key)
+				one_time_password = otp.generate()
+				print(one_time_password)
+		except Exception as e:
+			print("Error loading key for getting OTP, add it with -g option")
 	else:
 		print("usage: python3 -g [64-hex-string] -k")
 
