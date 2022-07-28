@@ -32,36 +32,30 @@ def save_key(key_64_hex):
 def parse():
 	parser = argparse.ArgumentParser(
 		prog = 'python3 stockholm.py',
-		description = 'encrypt/decrypt all files in home dir'
+		description = 'One time password implementation.'
 	)
-	parser.add_argument('-v', '--version', action='version', version='Stockholm 1.0')
-	parser.add_argument('-r', '--reverse', nargs=1, help='decrypt files', default = None)
-	parser.add_argument('-s', '--silent', action='store_true', help = 'silent mode', default = False)
+	parser.add_argument('-v', '--version', action='version', version='KikOTP 1.0')
+	parser.add_argument('-g', '--get-key', nargs=1, help='Save hexadecimal key', default = None)
+	parser.add_argument('-k', '--key-produce', action='store_true', help = 'Generate new otp password.', default = False)
 	args = parser.parse_args()
 	return args.__dict__
 
 if __name__ == "__main__":
 	dict = parse()
-	silent = str(int(dict.get("silent")))
-	key = dict.get("reverse")
-	if (key):
-		os.system("./to_decrypt.sh " + key[0] + " " + silent)
+	new_key = dict.get("get-key")
+	if (new_key):
+		save_key(new_key)
+		print("Key succesfully encrypted into ft_otp.key")
+	else if (dict.get("key-produce"))
+		encryptor = Encryptor()
+		key = encryptor.get_decrypted_key(encryption_seed, key_file_name)
+		print(key)
+		otp = OTP(key)
+		one_time_password = otp.generate()
+		print(one_time_password)
 	else:
-		key = Fernet.generate_key()
-		try:
-			give_key(key)
-		except Exception:
-			print(key.decode())
-		key = key.decode()
-		os.system("./to_encrypt.sh " + key + " " + silent)
+		print("usage: python3 -g [64-hex-string] -k")
 
-encryptor = Encryptor()
-key = encryptor.get_decrypted_key(encryption_seed, key_file_name)
-print(key)
-
-otp = OTP(key)
-algo = otp.generate()
-print(algo)
 
 # El programa deberá llamarse ft_otp.
 # • Con la opción -g , el programa recibirá como argumento una clave hexadecimal
